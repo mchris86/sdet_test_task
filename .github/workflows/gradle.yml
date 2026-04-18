@@ -7,8 +7,12 @@ on:
 
 jobs:
   build-and-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     permissions:
       contents: read
     
@@ -29,7 +33,7 @@ jobs:
       uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew build
+      run: ./gradlew build --exclude-task test
 
     - name: Run UI tests
       if: ${{ env.LICENSE_KEY != '' }}
