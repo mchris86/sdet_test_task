@@ -23,8 +23,6 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
-    # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
-    # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
 
@@ -38,3 +36,17 @@ jobs:
     - name: Skip UI tests if LICENSE_KEY is missing
       if: ${{ env.LICENSE_KEY == '' }}
       run: echo "LICENSE_KEY is not configured, so UI tests were skipped."
+
+    - name: Upload build reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: build
+        path: |
+          **/build/reports/
+          **/build/test-results/
+
+    - name: Upload IDE test logs
+      uses: actions/upload-artifact@v4
+      with:
+        name: logs
+        path: '**/out/ide-tests/tests/**/log'
